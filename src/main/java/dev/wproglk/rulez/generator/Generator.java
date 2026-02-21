@@ -8,8 +8,6 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import java.util.List;
-
 public class Generator {
     public static String generateHTML(final Rule rule) {
         final ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
