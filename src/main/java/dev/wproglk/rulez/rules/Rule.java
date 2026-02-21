@@ -1,8 +1,7 @@
 package dev.wproglk.rulez.rules;
 
 import com.jayway.jsonpath.JsonPath;
-
-import java.util.List;
+import com.jayway.jsonpath.PathNotFoundException;
 
 public class Rule {
 
@@ -13,10 +12,15 @@ public class Rule {
     }
 
     public String apply(final String json) {
-        return JsonPath.read(json, jsonPath);
+        try {
+            return JsonPath.read(json, jsonPath);
+        }
+        catch (PathNotFoundException e) {
+            return null;
+        }
     }
 
-    public String getAttributeName()   {
+    public String getAttributeName() {
         return "firstname";
     }
 }
