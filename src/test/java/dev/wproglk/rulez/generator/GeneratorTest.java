@@ -14,6 +14,6 @@ public class GeneratorTest {
         String result = Generator.generateHTML(rule);
 
         // assert
-       Approvals.verifyHtml(result);
+        Approvals.verifyHtml(result);
     }
 }

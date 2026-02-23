@@ -25,7 +25,7 @@ public class Generator {
 
         final Document doc = Jsoup.parse(html);
         doc.outputSettings(new Document.OutputSettings()
-                        .indentAmount(2)
+                .indentAmount(2)
                 .prettyPrint(true));
         return doc.outerHtml();
     }
