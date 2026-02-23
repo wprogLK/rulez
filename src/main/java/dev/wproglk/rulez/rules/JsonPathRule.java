@@ -5,13 +5,7 @@ import com.jayway.jsonpath.PathNotFoundException;
 
 import java.util.Map;
 
-public class JsonPathRule implements Rule {
-
-    private final String jsonPath;
-
-    public JsonPathRule(String jsonPath) {
-        this.jsonPath = jsonPath;
-    }
+public record JsonPathRule(String jsonPath) implements Rule {
 
     @Override
     public String apply(final String source, Map<String, String> result) {

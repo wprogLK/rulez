@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class Ruleset {
-    private final List<? extends Rule> rules;
-    private final String targetName;
-
+public record Ruleset(String targetName, List<? extends Rule> rules) {
     public Ruleset(String targetName, Rule... rules) {
-        this.targetName = targetName;
-        this.rules = List.of(rules);
+        this(targetName, List.of(rules));
+    }
+
+    public String getTargetDescription() {
+        return "Firstname of person";
     }
 
     public String apply(final String source, Map<String, String> results) {
@@ -18,9 +18,5 @@ public class Ruleset {
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
-    }
-
-    public String getTargetName() {
-        return targetName;
     }
 }

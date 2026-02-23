@@ -24,7 +24,9 @@ public class Engine {
     static void main() throws IOException {
         final Engine engine = new Engine();
         Rule firstName = new JsonPathRule("$.firstname");
-        Ruleset ruleset = new Ruleset("firstname", firstName);
+        Rule backup = new JsonPathRule("$.backup");
+
+        Ruleset ruleset = new Ruleset("firstname", firstName, backup);
 
         engine.setRulesets(ruleset);
         engine.generateDocumentation();
@@ -44,7 +46,7 @@ public class Engine {
         HashMap<String, String> results = new HashMap<>(); // targetName / attributeName, result
 
         for (Ruleset ruleset : this.rulesets) {
-            results.put(ruleset.getTargetName(), ruleset.apply(source, results));
+            results.put(ruleset.targetName(), ruleset.apply(source, results));
         }
 
         return results.get("fullname");

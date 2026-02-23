@@ -1,8 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
-    <tr th:fragment="jsonPathRule(rule)">
-        <td th:text="${rule.attributeName}" />
-        <td>Desc</td>
-        <td>rule</td>
-        <td>Desc rule</td>
-    </tr>
+  <ol th:fragment="ruleRule(rule)">
+    <li th:text="${rule.jsonPath}"/>
+  </ol>
+
+  <div th:fragment="ruleDescription(rule)">
+    Takes the value under the given JSON Path.
+  </div>
 </html>

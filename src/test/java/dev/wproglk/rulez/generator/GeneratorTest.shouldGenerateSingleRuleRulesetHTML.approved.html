@@ -20,9 +20,19 @@
         <!--                <tr th:replace="jsonPathRule :: jsonPathRule(${rule})"></tr>-->
         <tr>
           <td>firstname</td>
-          <td>Desc</td>
-          <td>rule</td>
-          <td>Desc rule</td>
+          <td>Firstname of person</td>
+          <td>
+            <ol>
+              <ol>
+                <li>$.firstname</li>
+              </ol>
+            </ol>
+          </td>
+          <td>
+            <ol>
+              <div>Takes the value under the given JSON Path.</div>
+            </ol>
+          </td>
         </tr>
       </tbody>
     </table>
