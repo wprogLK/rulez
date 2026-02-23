@@ -58,9 +58,10 @@ public class InterpreterTest {
                 }
                 """;
         final JsonPathRule rule = new JsonPathRule("$.firstname");
+        final Ruleset ruleset = new Ruleset("firstname", rule);
 
         // act
-        String result = Interpreter.execute(rule, source);
+        String result = Interpreter.execute(ruleset, source);
 
         // assert
         assertThat(result).isEqualTo("Foo");
@@ -69,16 +70,16 @@ public class InterpreterTest {
     @Test
     void extractLastname() {
         // arrange
-        final String json = """
+        final String source = """
                 {
                     "lastname": "Bar"
                 }
                 """;
         final JsonPathRule rule = new JsonPathRule("$.lastname");
+        final Ruleset ruleset = new Ruleset("lastname", rule);
 
         // act
-        String result = Interpreter.execute(rule, json);
-
+        String result = Interpreter.execute(ruleset, source);
         // assert
         assertThat(result).isEqualTo("Bar");
     }
