@@ -1,5 +1,7 @@
 package dev.wproglk.rulez.rules;
 
+import java.util.Map;
+
 public interface Rule {
-    String apply(final String json);
+    String apply(String json, Map<String, String> results);
 }

@@ -94,7 +94,7 @@ public class InterpreterTest {
 
         final List<Rule> rules = List.of(firstname, lastname);
 
-        final Ruleset nameRuleset = new Ruleset(rules);
+        final Ruleset nameRuleset = new Ruleset("name", rules);
 
         // act
         String result = Interpreter.execute(nameRuleset, json);

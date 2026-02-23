@@ -3,6 +3,8 @@ package dev.wproglk.rulez.rules;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 
+import java.util.Map;
+
 public class JsonPathRule implements Rule {
 
     private final String jsonPath;
@@ -12,7 +14,7 @@ public class JsonPathRule implements Rule {
     }
 
     @Override
-    public String apply(final String json) {
+    public String apply(final String json, Map<String, String> result) {
         try {
             return JsonPath.read(json, jsonPath);
         }
@@ -21,6 +23,7 @@ public class JsonPathRule implements Rule {
         }
     }
 
+    @Deprecated
     public String getAttributeName() {
         return "firstname";
     }
