@@ -14,9 +14,9 @@ public class JsonPathRule implements Rule {
     }
 
     @Override
-    public String apply(final String json, Map<String, String> result) {
+    public String apply(final String source, Map<String, String> result) {
         try {
-            return JsonPath.read(json, jsonPath);
+            return JsonPath.read(source, jsonPath);
         }
         catch (PathNotFoundException e) {
             return null;

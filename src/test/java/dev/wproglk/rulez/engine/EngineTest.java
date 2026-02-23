@@ -37,7 +37,7 @@ public class EngineTest {
     @Test
     void concatenateFullname() { // TODO order of ruleset should not matter
         // arrange
-        final String json = """
+        final String source = """
                 {
                     "firstname": "Foo",
                     "lastname": "Bar"
@@ -56,7 +56,7 @@ public class EngineTest {
         engine.setRulesets(firstnameRuleset, lastnameRuleset, fullnameRuleset);
 
         // act
-        String result = engine.executeRuleset(json);
+        String result = engine.executeRuleset(source);
 
         // assert
         assertThat(result).isEqualTo("Foo Bar");

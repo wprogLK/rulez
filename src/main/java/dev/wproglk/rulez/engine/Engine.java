@@ -42,12 +42,12 @@ public class Engine {
         this.rulesets = List.of(rulesets);
     }
 
-    public String executeRuleset(String json) {
+    public String executeRuleset(String source) {
         // TODO what if value does not yet exist? FutureCompletable?
         HashMap<String, String> results = new HashMap<>(); // targetName / attributeName, result
 
         for (Ruleset ruleset : this.rulesets) {
-            results.put(ruleset.getTargetName(), ruleset.apply(json, results));
+            results.put(ruleset.getTargetName(), ruleset.apply(source, results));
         }
 
         return results.get("fullname");
