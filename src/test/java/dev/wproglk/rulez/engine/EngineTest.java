@@ -1,5 +1,6 @@
 package dev.wproglk.rulez.engine;
 
+import dev.wproglk.rulez.rules.JsonPathRule;
 import dev.wproglk.rulez.rules.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +21,7 @@ public class EngineTest {
     @Test
     public void shouldWriteDocumentation() throws IOException {
         // arrange
-        Rule rule = new Rule("$.firstname");
+        JsonPathRule rule = new JsonPathRule("$.firstname");
         Engine engine = new Engine(fileWriterPort, rule);
 
         // act

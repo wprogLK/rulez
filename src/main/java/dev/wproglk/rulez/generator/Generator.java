@@ -1,6 +1,6 @@
 package dev.wproglk.rulez.generator;
 
-import dev.wproglk.rulez.rules.Rule;
+import dev.wproglk.rulez.rules.JsonPathRule;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.thymeleaf.TemplateEngine;
@@ -9,7 +9,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 public class Generator {
-    public static String generateHTML(final Rule rule) {
+    public static String generateHTML(final JsonPathRule rule) {
         final ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCharacterEncoding("UTF-8");

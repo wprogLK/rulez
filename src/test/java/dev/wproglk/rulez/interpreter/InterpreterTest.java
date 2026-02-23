@@ -1,5 +1,6 @@
 package dev.wproglk.rulez.interpreter;
 
+import dev.wproglk.rulez.rules.JsonPathRule;
 import dev.wproglk.rulez.rules.Rule;
 import dev.wproglk.rulez.rules.Ruleset;
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,7 @@ public class InterpreterTest {
                     "firstname": "Foo"
                 }
                 """;
-        final Rule rule = new Rule("$.firstname");
+        final JsonPathRule rule = new JsonPathRule("$.firstname");
 
         // act
         String result = Interpreter.execute(rule, json);
@@ -75,7 +76,7 @@ public class InterpreterTest {
                     "lastname": "Bar"
                 }
                 """;
-        final Rule rule = new Rule("$.lastname");
+        final JsonPathRule rule = new JsonPathRule("$.lastname");
 
         // act
         String result = Interpreter.execute(rule, json);
@@ -88,8 +89,8 @@ public class InterpreterTest {
     @MethodSource
     void precedenceBaseExtraction(String json, String expectedResult) {
         // arrange
-        final Rule firstname = new Rule("$.firstname");
-        final Rule lastname = new Rule("$.lastname");
+        final JsonPathRule firstname = new JsonPathRule("$.firstname");
+        final JsonPathRule lastname = new JsonPathRule("$.lastname");
 
         final List<Rule> rules = List.of(firstname, lastname);
 
