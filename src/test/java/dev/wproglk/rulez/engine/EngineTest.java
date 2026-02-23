@@ -25,7 +25,10 @@ public class EngineTest {
     public void shouldWriteDocumentation() throws IOException {
         // arrange
         JsonPathRule rule = new JsonPathRule("$.firstname");
-        Engine engine = new Engine(fileWriterPort, rule);
+        Ruleset ruleset = new Ruleset("firstname", rule);
+
+        Engine engine = new Engine(fileWriterPort);
+        engine.setRulesets(ruleset);
 
         // act
         engine.generateDocumentation();
