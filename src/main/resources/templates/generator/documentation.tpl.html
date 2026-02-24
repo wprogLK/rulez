@@ -19,8 +19,9 @@
       </thead>
 
       <tbody>
-        <!--                <tr th:replace="jsonPathRule :: jsonPathRule(${rule})"></tr>-->
-        <tr th:replace="ruleset :: ruleset(${ruleset})"></tr>
+        <th:block th:each="ruleset : ${rulesets}">
+          <tr th:replace="ruleset :: ruleset(${ruleset})"></tr>
+        </th:block>
       </tbody>
     </table>
   </body>

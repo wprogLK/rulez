@@ -17,22 +17,25 @@
         </tr>
       </thead>
       <tbody>
-        <!--                <tr th:replace="jsonPathRule :: jsonPathRule(${rule})"></tr>-->
         <tr>
-          <td>firstname</td>
-          <td>Firstname of person</td>
-          <td>
-            <ol>
-              <ol>
-                <li>$.firstname</li>
-              </ol>
-            </ol>
-          </td>
-          <td>
-            <ol>
-              <div>Takes the value under the given JSON Path.</div>
-            </ol>
-          </td>
+          <td rowspan="2">firstname</td>
+          <td rowspan="2">Firstname of person</td>
+          <td>1. <code>$.firstname</code></td>
+          <td>Takes the value under the given JSON Path.</td>
+        </tr>
+        <tr>
+          <td>2. <code>$.backup</code></td>
+          <td>Takes the value under the given JSON Path.</td>
+        </tr>
+        <tr>
+          <td rowspan="2">firstname</td>
+          <td rowspan="2">Firstname of person</td>
+          <td>1. <code>$.lastname</code></td>
+          <td>Takes the value under the given JSON Path.</td>
+        </tr>
+        <tr>
+          <td>2. <code>$.backup</code></td>
+          <td>Takes the value under the given JSON Path.</td>
         </tr>
       </tbody>
     </table>

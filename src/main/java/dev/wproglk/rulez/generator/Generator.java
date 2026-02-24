@@ -15,7 +15,7 @@ public class Generator {
         final ClassLoaderTemplateResolver resolver = getTemplateResolver();
 
         final Context context = new Context();
-        context.setVariable("ruleset", rulesets.getFirst());
+        context.setVariable("rulesets", rulesets);
 
         return generateHTML(resolver, context);
     }

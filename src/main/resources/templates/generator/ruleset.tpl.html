@@ -1,17 +1,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
-  <tr th:fragment="ruleset(ruleset)">
-    <td th:text="${ruleset.targetName}"/>
-    <td th:text="${ruleset.targetDescription}"/>
-    <td>
-      <ol th:each="rule : ${ruleset.rules}">
-        <li th:replace="jsonPathRule :: ruleRule(${rule})"></li>
-      </ol>
-
-    </td>
-    <td>
-      <ol th:each="rule : ${ruleset.rules}">
-        <li th:replace="jsonPathRule :: ruleDescription(${rule})"></li>
-      </ol>
-    </td>
-  </tr>
+  <th:block th:fragment="ruleset(ruleset)">
+    <tr th:each="rule, state : ${ruleset.rules}">
+      <th:block th:if="${state.first}">
+        <td th:rowspan="${ruleset.rules.size}" th:text="${ruleset.targetName}"/>
+        <td th:rowspan="${ruleset.rules.size}" th:text="${ruleset.targetDescription}"/>
+      </th:block>
+      <td>
+        <th:block th:replace="jsonPathRule :: ruleRule(${state.count}, ${rule})"></th:block>
+      </td>
+      <td>
+        <th:block th:replace="jsonPathRule :: ruleDescription(${rule})"></th:block>
+      </td>
+    </tr>
+  </th:block>
 </html>

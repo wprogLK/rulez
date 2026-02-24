@@ -1,9 +1,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
-  <ol th:fragment="ruleRule(rule)">
-    <li th:text="${rule.jsonPath}"/>
-  </ol>
+  <th:block th:fragment="ruleRule(number, rule)">
+    <th:block th:text="${number + '.'}"/>
+    <code th:text="${rule.jsonPath}"></code>
+  </th:block>
 
-  <div th:fragment="ruleDescription(rule)">
+  <th:block th:fragment="ruleDescription(rule)">
     Takes the value under the given JSON Path.
-  </div>
+  </th:block>
 </html>

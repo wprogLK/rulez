@@ -23,12 +23,15 @@ public class Engine {
 
     static void main() throws IOException {
         final Engine engine = new Engine();
+
         Rule firstName = new JsonPathRule("$.firstname");
         Rule backup = new JsonPathRule("$.backup");
+        Ruleset rulesetFirstname = new Ruleset("firstname", firstName, backup);
 
-        Ruleset ruleset = new Ruleset("firstname", firstName, backup);
+        Rule lastName = new JsonPathRule("$.lastname");
+        Ruleset rulesetLastname = new Ruleset("firstname", lastName, backup);
 
-        engine.setRulesets(ruleset);
+        engine.setRulesets(rulesetFirstname, rulesetLastname);
         engine.generateDocumentation();
     }
 
