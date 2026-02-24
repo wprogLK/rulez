@@ -16,9 +16,4 @@ public record JsonPathRule(String jsonPath) implements Rule {
             return null;
         }
     }
-
-    @Deprecated
-    public String getAttributeName() {
-        return "firstname";
-    }
 }

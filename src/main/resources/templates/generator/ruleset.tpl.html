@@ -6,10 +6,10 @@
         <td th:rowspan="${ruleset.rules.size}" th:text="${ruleset.targetDescription}"/>
       </th:block>
       <td>
-        <th:block th:replace="jsonPathRule :: ruleRule(${state.count}, ${rule})"></th:block>
+        <th:block th:replace="${rule.templatename} :: ruleRule(${state.count}, ${rule})"></th:block>
       </td>
       <td>
-        <th:block th:replace="jsonPathRule :: ruleDescription(${rule})"></th:block>
+        <th:block th:replace="${rule.templatename} :: ruleDescription(${rule})"></th:block>
       </td>
     </tr>
   </th:block>
