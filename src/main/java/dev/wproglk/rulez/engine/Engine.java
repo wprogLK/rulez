@@ -1,6 +1,7 @@
 package dev.wproglk.rulez.engine;
 
 import dev.wproglk.rulez.generator.Generator;
+import dev.wproglk.rulez.rules.ConcatenateRule;
 import dev.wproglk.rulez.rules.JsonPathRule;
 import dev.wproglk.rulez.rules.Rule;
 import dev.wproglk.rulez.rules.Ruleset;
@@ -29,9 +30,12 @@ public class Engine {
         Ruleset rulesetFirstname = new Ruleset("firstname", firstName, backup);
 
         Rule lastName = new JsonPathRule("$.lastname");
-        Ruleset rulesetLastname = new Ruleset("firstname", lastName, backup);
+        Ruleset rulesetLastname = new Ruleset("lastname", lastName, backup);
 
-        engine.setRulesets(rulesetFirstname, rulesetLastname);
+        Rule fullname = new ConcatenateRule("firstname", "lastname", " ");
+        Ruleset rulesetFullname = new Ruleset("fullname", fullname);
+
+        engine.setRulesets(rulesetFirstname, rulesetLastname, rulesetFullname);
         engine.generateDocumentation();
     }
 

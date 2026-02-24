@@ -1,0 +1,9 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="ruleRule(number, rule)">
+    <code th:text="${rule.targetNameA} + ' + $delimiter + ' + ${rule.targetNameB}"></code>
+</th:block>
+
+<th:block th:fragment="ruleDescription(rule)">
+    Takes the computed values of the two given targetNames and concatenates them together with the given delimiter.
+</th:block>
+</html>

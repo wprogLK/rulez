@@ -28,7 +28,7 @@
           <td>Takes the value under the given JSON Path.</td>
         </tr>
         <tr>
-          <td rowspan="2">firstname</td>
+          <td rowspan="2">lastname</td>
           <td rowspan="2">Firstname of person</td>
           <td>1. <code>$.lastname</code></td>
           <td>Takes the value under the given JSON Path.</td>
@@ -36,6 +36,12 @@
         <tr>
           <td>2. <code>$.backup</code></td>
           <td>Takes the value under the given JSON Path.</td>
+        </tr>
+        <tr>
+          <td rowspan="1">fullname</td>
+          <td rowspan="1">Firstname of person</td>
+          <td><code>firstname + $delimiter + lastname</code></td>
+          <td>Takes the computed values of the two given targetNames and concatenates them together with the given delimiter.</td>
         </tr>
       </tbody>
     </table>
