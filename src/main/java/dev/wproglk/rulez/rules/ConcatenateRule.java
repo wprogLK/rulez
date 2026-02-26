@@ -9,6 +9,10 @@ public record ConcatenateRule(String targetNameA, String targetNameB, String del
         String valueA = results.get(targetNameA);
         String valueB = results.get(targetNameB);
 
+        if (valueA == null || valueB == null) {
+            return null;
+        }
+
         return valueA + delimiter + valueB;
     }
 }

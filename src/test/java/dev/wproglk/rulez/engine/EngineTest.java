@@ -6,12 +6,18 @@ import dev.wproglk.rulez.rules.Rule;
 import dev.wproglk.rulez.rules.Ruleset;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Named.named;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
@@ -20,6 +26,21 @@ public class EngineTest {
 
     @Mock
     FileWriterPort fileWriterPort;
+
+    public static Stream<Arguments> concatenateFullname() {
+        final Rule firstname = new JsonPathRule("$.firstname");
+        final Rule lastname = new JsonPathRule("$.lastname");
+        final Rule fullname = new ConcatenateRule("firstname", "lastname", " ");
+
+        final Ruleset firstnameRuleset = new Ruleset("firstname", firstname);
+        final Ruleset lastnameRuleset = new Ruleset("lastname", lastname);
+        final Ruleset fullnameRuleset = new Ruleset("fullname", fullname);
+
+        return Stream.of(
+                Arguments.of(named("logical order: first, last ,full", List.of(firstnameRuleset, lastnameRuleset, fullnameRuleset))),
+                Arguments.of(named("reversed logical order: full, last ,first", List.of(fullnameRuleset, lastnameRuleset, firstnameRuleset)))
+        );
+    }
 
     @Test
     public void shouldWriteDocumentation() throws IOException {
@@ -37,8 +58,9 @@ public class EngineTest {
         verify(fileWriterPort).write(anyString());
     }
 
-    @Test
-    void concatenateFullname() { // TODO order of ruleset should not matter
+    @ParameterizedTest
+    @MethodSource
+    void concatenateFullname(List<Ruleset> rulesets) {
         // arrange
         final String source = """
                 {
@@ -47,16 +69,8 @@ public class EngineTest {
                 }
                 """;
 
-        final Rule firstname = new JsonPathRule("$.firstname");
-        final Rule lastname = new JsonPathRule("$.lastname");
-        final Rule fullname = new ConcatenateRule("firstname", "lastname", " ");
-
-        final Ruleset firstnameRuleset = new Ruleset("firstname", firstname);
-        final Ruleset lastnameRuleset = new Ruleset("lastname", lastname);
-        final Ruleset fullnameRuleset = new Ruleset("fullname", fullname);
-
         Engine engine = new Engine(fileWriterPort);
-        engine.setRulesets(firstnameRuleset, lastnameRuleset, fullnameRuleset);
+        engine.setRulesets(rulesets);
 
         // act
         String result = engine.executeRuleset(source);

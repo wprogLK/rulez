@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.util.function.Predicate.not;
+
 public class Engine {
     private final FileWriterPort fileWriter;
     private List<Ruleset> rulesets;
@@ -48,13 +50,25 @@ public class Engine {
         this.rulesets = List.of(rulesets);
     }
 
+    public void setRulesets(List<Ruleset> rulesets) {
+        this.rulesets = rulesets;
+    }
+
     public String executeRuleset(String source) {
-        // TODO what if value does not yet exist? FutureCompletable?
         HashMap<String, String> results = new HashMap<>(); // targetName / attributeName, result
 
-        for (Ruleset ruleset : this.rulesets) {
-            results.put(ruleset.targetName(), ruleset.apply(source, results));
-        }
+        do {
+            for (Ruleset ruleset : rulesets) {
+                if (ruleset.isCompleted()) {
+                    continue;
+                }
+
+                String result = ruleset.apply(source, results);
+                if (ruleset.isCompleted()) {
+                    results.put(ruleset.targetName(), result);
+                }
+            }
+        } while (rulesets.stream().anyMatch(not(Ruleset::isCompleted)));
 
         return results.get("fullname");
     }
