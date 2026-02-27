@@ -59,27 +59,25 @@ public class Engine {
     public String executeRuleset(String source) {
         HashMap<String, String> results = new HashMap<>(); // targetName / attributeName, result
 
-        long numberOfIncompleteRulesBefore = 0;
-        long numberOfIncompleteRulesAfter = 0;
-
         do {
-            numberOfIncompleteRulesBefore = incompletedRulesets().count();
+            boolean noAdditionalRuleHasBeenResolved = true;
 
-            incompletedRulesets()
-                    .forEach((ruleset) -> {
-                        String result = ruleset.apply(source, results);
-                        if (ruleset.isCompleted()) {
-                            results.put(ruleset.targetName(), result);
-                        }
-                    });
+            for (Ruleset ruleset : rulesets) {
+                if (ruleset.isCompleted()) {
+                    continue;
+                }
 
-            numberOfIncompleteRulesAfter = incompletedRulesets().count();
+                String result = ruleset.apply(source, results);
+                if (ruleset.isCompleted()) {
+                    results.put(ruleset.targetName(), result);
+                    noAdditionalRuleHasBeenResolved = false;
+                }
+            }
 
-            boolean noAdditionalRuleHasBeenResolved = numberOfIncompleteRulesBefore == numberOfIncompleteRulesAfter;
             if (noAdditionalRuleHasBeenResolved) {
                 throw new IncompletableRulesetException(incompletedRulesets().toList());
             }
-        } while (numberOfIncompleteRulesAfter > 0);
+        } while (incompletedRulesets().findAny().isPresent());
 
         return results.get("fullname");
     }
