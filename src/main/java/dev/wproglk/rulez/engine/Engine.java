@@ -1,5 +1,6 @@
 package dev.wproglk.rulez.engine;
 
+import dev.wproglk.rulez.engine.exceptions.IncompletableRulesetException;
 import dev.wproglk.rulez.generator.Generator;
 import dev.wproglk.rulez.rules.ConcatenateRule;
 import dev.wproglk.rulez.rules.JsonPathRule;
@@ -9,6 +10,7 @@ import dev.wproglk.rulez.rules.Ruleset;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.function.Predicate.not;
 
@@ -57,19 +59,32 @@ public class Engine {
     public String executeRuleset(String source) {
         HashMap<String, String> results = new HashMap<>(); // targetName / attributeName, result
 
-        do {
-            for (Ruleset ruleset : rulesets) {
-                if (ruleset.isCompleted()) {
-                    continue;
-                }
+        long numberOfIncompleteRulesBefore = 0;
+        long numberOfIncompleteRulesAfter = 0;
 
-                String result = ruleset.apply(source, results);
-                if (ruleset.isCompleted()) {
-                    results.put(ruleset.targetName(), result);
-                }
+        do {
+            numberOfIncompleteRulesBefore = incompletedRulesets().count();
+
+            incompletedRulesets()
+                    .forEach((ruleset) -> {
+                        String result = ruleset.apply(source, results);
+                        if (ruleset.isCompleted()) {
+                            results.put(ruleset.targetName(), result);
+                        }
+                    });
+
+            numberOfIncompleteRulesAfter = incompletedRulesets().count();
+
+            boolean noAdditionalRuleHasBeenResolved = numberOfIncompleteRulesBefore == numberOfIncompleteRulesAfter;
+            if (noAdditionalRuleHasBeenResolved) {
+                throw new IncompletableRulesetException(incompletedRulesets().toList());
             }
-        } while (rulesets.stream().anyMatch(not(Ruleset::isCompleted)));
+        } while (numberOfIncompleteRulesAfter > 0);
 
         return results.get("fullname");
+    }
+
+    private Stream<Ruleset> incompletedRulesets() {
+        return rulesets.stream().filter(not(Ruleset::isCompleted));
     }
 }

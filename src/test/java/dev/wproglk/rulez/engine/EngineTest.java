@@ -1,5 +1,6 @@
 package dev.wproglk.rulez.engine;
 
+import dev.wproglk.rulez.engine.exceptions.IncompletableRulesetException;
 import dev.wproglk.rulez.rules.ConcatenateRule;
 import dev.wproglk.rulez.rules.JsonPathRule;
 import dev.wproglk.rulez.rules.Rule;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.junit.jupiter.api.Named.named;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -77,5 +79,33 @@ public class EngineTest {
 
         // assert
         assertThat(result).isEqualTo("Foo Bar");
+    }
+
+    @Test
+    void incompletableRulesets_missingSource() {
+        // arrange
+        final String source = "{}";
+
+        Rule rule = new JsonPathRule("$.firstname");
+        Ruleset ruleset = new Ruleset("firstname", rule);
+
+        Engine engine = new Engine(fileWriterPort);
+        engine.setRulesets(ruleset);
+
+        // act
+        IncompletableRulesetException exception = catchThrowableOfType(IncompletableRulesetException.class, () -> engine.executeRuleset(source));
+
+        // assert
+        assertThat(exception).isInstanceOf(IncompletableRulesetException.class)
+                .satisfies(e -> assertThat(exception.getIncompletableRulesets()).isNotEmpty());
+    }
+
+    @Test
+    void incompletableRulesets_circularRulesets() {
+        // arrange
+
+        // act
+
+        // assert
     }
 }
