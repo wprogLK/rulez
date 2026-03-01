@@ -8,8 +8,10 @@ import dev.wproglk.rulez.rules.Rule;
 import dev.wproglk.rulez.rules.Ruleset;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Stream;
 
 import static java.util.function.Predicate.not;
@@ -58,26 +60,28 @@ public class Engine {
 
     public String executeRuleset(String source) {
         HashMap<String, Result> results = new HashMap<>(); // targetName / attributeName, result
+        List<Ruleset> pendingRulesets = new ArrayList<>(this.rulesets);
 
-        do {
-            boolean noAdditionalRuleHasBeenResolved = true;
+        boolean noAdditionalRulesetHasBeenResolved = true;
 
-            for (Ruleset ruleset : rulesets) {
-                if (ruleset.isCompleted()) {
-                    continue;
-                }
+        while (!pendingRulesets.isEmpty()) {
+            ListIterator<Ruleset> iterator = pendingRulesets.listIterator();
+
+            while (iterator.hasNext()) {
+                Ruleset ruleset = iterator.next();
 
                 Result result = ruleset.apply(source, results);
                 if (result.isCompleted()) {
                     results.put(ruleset.targetName(), result);
-                    noAdditionalRuleHasBeenResolved = false;
+                    noAdditionalRulesetHasBeenResolved = false;
+                    iterator.remove();
                 }
             }
 
-            if (noAdditionalRuleHasBeenResolved) {
-                throw new IncompletableRulesetException(incompletedRulesets().toList());
+            if (noAdditionalRulesetHasBeenResolved) {
+                throw new IncompletableRulesetException(pendingRulesets);
             }
-        } while (incompletedRulesets().findAny().isPresent());
+        }
 
         return results.get("fullname").getValue();
     }
