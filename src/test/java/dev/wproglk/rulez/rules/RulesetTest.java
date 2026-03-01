@@ -32,7 +32,6 @@ class RulesetTest {
         Ruleset ruleset = new Ruleset("test", new JsonPathRule("$.notExisting"));
         String json = "{}";
 
-
         // act
         Result result = ruleset.apply(json, new ResultCache());
 

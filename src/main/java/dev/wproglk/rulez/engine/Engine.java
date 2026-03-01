@@ -1,16 +1,14 @@
 package dev.wproglk.rulez.engine;
 
-import dev.wproglk.rulez.engine.exceptions.IncompletableRulesetException;
 import dev.wproglk.rulez.generator.Generator;
+import dev.wproglk.rulez.interpreter.Interpreter;
 import dev.wproglk.rulez.rules.ConcatenateRule;
 import dev.wproglk.rulez.rules.JsonPathRule;
 import dev.wproglk.rulez.rules.Rule;
 import dev.wproglk.rulez.rules.Ruleset;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class Engine {
     private final FileWriterPort fileWriter;
@@ -54,31 +52,12 @@ public class Engine {
         this.rulesets = rulesets;
     }
 
+    public String executeRuleset(String source, String attribute) {
+        return Interpreter.execute(rulesets, source)
+                .getResult(attribute).getValue();
+    }
+
     public String executeRuleset(String source) {
-        ResultCache results = new ResultCache();
-        List<Ruleset> pendingRulesets = new ArrayList<>(this.rulesets);
-
-        boolean noAdditionalRulesetHasBeenResolved = true;
-
-        while (!pendingRulesets.isEmpty()) {
-            ListIterator<Ruleset> iterator = pendingRulesets.listIterator();
-
-            while (iterator.hasNext()) {
-                Ruleset ruleset = iterator.next();
-
-                Result result = ruleset.apply(source, results);
-                if (result.isCompleted()) {
-                    results.storeResult(ruleset.targetName(), result);
-                    noAdditionalRulesetHasBeenResolved = false;
-                    iterator.remove();
-                }
-            }
-
-            if (noAdditionalRulesetHasBeenResolved) {
-                throw new IncompletableRulesetException(pendingRulesets);
-            }
-        }
-
-        return results.getResult("fullname").getValue();
+        return executeRuleset(source, "fullname");
     }
 }
