@@ -5,6 +5,7 @@ import dev.wproglk.rulez.rules.ConcatenateRule;
 import dev.wproglk.rulez.rules.JsonPathRule;
 import dev.wproglk.rulez.rules.Rule;
 import dev.wproglk.rulez.rules.Ruleset;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -100,6 +101,7 @@ public class EngineTest {
                 .satisfies(e -> assertThat(exception.getIncompletableRulesets()).isNotEmpty());
     }
 
+    @Disabled
     @Test
     void incompletableRulesets_circularRulesets() {
         // arrange

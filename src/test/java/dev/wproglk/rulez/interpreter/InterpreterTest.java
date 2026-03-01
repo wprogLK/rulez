@@ -1,5 +1,6 @@
 package dev.wproglk.rulez.interpreter;
 
+import dev.wproglk.rulez.engine.Result;
 import dev.wproglk.rulez.rules.JsonPathRule;
 import dev.wproglk.rulez.rules.Ruleset;
 import org.junit.jupiter.api.Test;
@@ -61,10 +62,10 @@ public class InterpreterTest {
         final Ruleset ruleset = new Ruleset("firstname", rule);
 
         // act
-        String result = Interpreter.execute(ruleset, source);
+        Result result = Interpreter.execute(ruleset, source);
 
         // assert
-        assertThat(result).isEqualTo("Foo");
+        assertThat(result.getValue()).isEqualTo("Foo");
     }
 
     @Test
@@ -79,9 +80,9 @@ public class InterpreterTest {
         final Ruleset ruleset = new Ruleset("lastname", rule);
 
         // act
-        String result = Interpreter.execute(ruleset, source);
+        Result result = Interpreter.execute(ruleset, source);
         // assert
-        assertThat(result).isEqualTo("Bar");
+        assertThat(result.getValue()).isEqualTo("Bar");
     }
 
     @ParameterizedTest(name = "{0}")
@@ -94,9 +95,9 @@ public class InterpreterTest {
         final Ruleset nameRuleset = new Ruleset("name", firstname, lastname);
 
         // act
-        String result = Interpreter.execute(nameRuleset, source);
+        Result result = Interpreter.execute(nameRuleset, source);
 
         // assert
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result.getValue()).isEqualTo(expectedResult);
     }
 }

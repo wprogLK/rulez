@@ -2,18 +2,19 @@ package dev.wproglk.rulez.rules;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
+import dev.wproglk.rulez.engine.Result;
 
 import java.util.Map;
 
 public record JsonPathRule(String jsonPath) implements Rule {
 
     @Override
-    public String apply(final String source, Map<String, String> result) {
+    public Result apply(final String source, Map<String, Result> result) {
         try {
-            return JsonPath.read(source, jsonPath);
-        }
-        catch (PathNotFoundException e) {
-            return null;
+            String value = JsonPath.read(source, jsonPath);
+            return Result.completedResult(value);
+        } catch (PathNotFoundException e) {
+            return Result.incompleteResult();
         }
     }
 }

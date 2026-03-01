@@ -57,7 +57,7 @@ public class Engine {
     }
 
     public String executeRuleset(String source) {
-        HashMap<String, String> results = new HashMap<>(); // targetName / attributeName, result
+        HashMap<String, Result> results = new HashMap<>(); // targetName / attributeName, result
 
         do {
             boolean noAdditionalRuleHasBeenResolved = true;
@@ -67,8 +67,8 @@ public class Engine {
                     continue;
                 }
 
-                String result = ruleset.apply(source, results);
-                if (ruleset.isCompleted()) {
+                Result result = ruleset.apply(source, results);
+                if (result.isCompleted()) {
                     results.put(ruleset.targetName(), result);
                     noAdditionalRuleHasBeenResolved = false;
                 }
@@ -79,7 +79,7 @@ public class Engine {
             }
         } while (incompletedRulesets().findAny().isPresent());
 
-        return results.get("fullname");
+        return results.get("fullname").getValue();
     }
 
     private Stream<Ruleset> incompletedRulesets() {

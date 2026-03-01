@@ -1,5 +1,6 @@
 package dev.wproglk.rulez.rules;
 
+import dev.wproglk.rulez.engine.Result;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -19,14 +20,15 @@ class RulesetTest {
                 }
                 """;
 
-        Map<String, String> intermediateResult = new HashMap<>();
+        Map<String, Result> intermediateResult = new HashMap<>();
 
         // act
-        String result = ruleset.apply(json, intermediateResult);
+        Result result = ruleset.apply(json, intermediateResult);
 
         // assert
-        assertThat(ruleset.isCompleted()).isTrue();
-        assertThat(result).isEqualTo("Foo");
+//        assertThat(ruleset.isCompleted()).isTrue();
+        assertThat(result.isCompleted()).isTrue();
+        assertThat(result.getValue()).isEqualTo("Foo");
     }
 
     @Test
@@ -36,13 +38,14 @@ class RulesetTest {
         String json = "{}";
 
 
-        Map<String, String> intermediateResult = new HashMap<>();
+        Map<String, Result> intermediateResult = new HashMap<>();
 
         // act
-        String result = ruleset.apply(json, intermediateResult);
+        Result result = ruleset.apply(json, intermediateResult);
 
         // assert
         assertThat(ruleset.isCompleted()).isFalse();
+        assertThat(result.isCompleted()).isFalse();
     }
 
 }

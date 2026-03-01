@@ -1,14 +1,15 @@
 package dev.wproglk.rulez.rules;
 
+import dev.wproglk.rulez.engine.Result;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 public final class Ruleset {
     private final String targetName;
     private final List<? extends Rule> rules;
-    private boolean completed;
+    @Deprecated
+    private final boolean completed;
 
     public Ruleset(String targetName, List<? extends Rule> rules) {
         this.targetName = targetName;
@@ -24,16 +25,18 @@ public final class Ruleset {
         return "Firstname of person";
     }
 
-    public String apply(final String source, Map<String, String> results) {
-        Optional<String> result = rules.stream().map(rule -> rule.apply(source, results))
-                .filter(Objects::nonNull)
-                .findFirst();
-
-        this.completed = result.isPresent();
-
-        return result.orElse(null);
+    public Result apply(final String source, Map<String, Result> results) {
+        return rules.stream().map(rule -> rule.apply(source, results))
+                .filter(Result::isCompleted)
+                .findFirst()
+                .orElse(Result.incompleteResult()); // should not be needed 
+//
+//        this.completed = result.isPresent();
+//
+//        return result.orElse(null);
     }
 
+    @Deprecated
     public boolean isCompleted() {
         return completed;
     }
