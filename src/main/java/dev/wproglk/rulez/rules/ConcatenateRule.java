@@ -1,18 +1,14 @@
 package dev.wproglk.rulez.rules;
 
 import dev.wproglk.rulez.engine.Result;
-
-import java.util.Map;
+import dev.wproglk.rulez.engine.ResultCache;
 
 public record ConcatenateRule(String targetNameA, String targetNameB, String delimiter) implements Rule {
 
     @Override
-    public Result apply(final String source, Map<String, Result> results) {
-        String valueA = results.get(targetNameA).getValue();
-        String valueB = results.get(targetNameB).getValue();
-
-        Result resultA = results.get(targetNameA);
-        Result resultB = results.get(targetNameB);
+    public Result apply(final String source, ResultCache results) {
+        Result resultA = results.getResult(targetNameA);
+        Result resultB = results.getResult(targetNameB);
 
         if (resultA.isIncompleted())
             return Result.incompleteResult();
@@ -20,6 +16,6 @@ public record ConcatenateRule(String targetNameA, String targetNameB, String del
         if (resultB.isIncompleted())
             return Result.incompleteResult();
 
-        return Result.completedResult(valueA + delimiter + valueB);
+        return Result.completedResult(resultA.getValue() + delimiter + resultB.getValue());
     }
 }

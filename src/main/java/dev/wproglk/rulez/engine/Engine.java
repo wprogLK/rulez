@@ -9,12 +9,8 @@ import dev.wproglk.rulez.rules.Ruleset;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.stream.Stream;
-
-import static java.util.function.Predicate.not;
 
 public class Engine {
     private final FileWriterPort fileWriter;
@@ -59,7 +55,7 @@ public class Engine {
     }
 
     public String executeRuleset(String source) {
-        HashMap<String, Result> results = new HashMap<>(); // targetName / attributeName, result
+        ResultCache results = new ResultCache();
         List<Ruleset> pendingRulesets = new ArrayList<>(this.rulesets);
 
         boolean noAdditionalRulesetHasBeenResolved = true;
@@ -72,7 +68,7 @@ public class Engine {
 
                 Result result = ruleset.apply(source, results);
                 if (result.isCompleted()) {
-                    results.put(ruleset.targetName(), result);
+                    results.storeResult(ruleset.targetName(), result);
                     noAdditionalRulesetHasBeenResolved = false;
                     iterator.remove();
                 }
@@ -83,10 +79,6 @@ public class Engine {
             }
         }
 
-        return results.get("fullname").getValue();
-    }
-
-    private Stream<Ruleset> incompletedRulesets() {
-        return rulesets.stream().filter(not(Ruleset::isCompleted));
+        return results.getResult("fullname").getValue();
     }
 }

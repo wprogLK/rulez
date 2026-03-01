@@ -1,10 +1,8 @@
 package dev.wproglk.rulez.rules;
 
 import dev.wproglk.rulez.engine.Result;
+import dev.wproglk.rulez.engine.ResultCache;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,13 +18,10 @@ class RulesetTest {
                 }
                 """;
 
-        Map<String, Result> intermediateResult = new HashMap<>();
-
         // act
-        Result result = ruleset.apply(json, intermediateResult);
+        Result result = ruleset.apply(json, new ResultCache());
 
         // assert
-//        assertThat(ruleset.isCompleted()).isTrue();
         assertThat(result.isCompleted()).isTrue();
         assertThat(result.getValue()).isEqualTo("Foo");
     }
@@ -38,14 +33,10 @@ class RulesetTest {
         String json = "{}";
 
 
-        Map<String, Result> intermediateResult = new HashMap<>();
-
         // act
-        Result result = ruleset.apply(json, intermediateResult);
+        Result result = ruleset.apply(json, new ResultCache());
 
         // assert
-        assertThat(ruleset.isCompleted()).isFalse();
         assertThat(result.isCompleted()).isFalse();
     }
-
 }

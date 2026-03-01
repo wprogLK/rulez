@@ -1,8 +1,7 @@
 package dev.wproglk.rulez.rules;
 
 import dev.wproglk.rulez.engine.Result;
-
-import java.util.Map;
+import dev.wproglk.rulez.engine.ResultCache;
 
 public interface Rule {
     /**
@@ -11,7 +10,7 @@ public interface Rule {
      * @param results
      * @return OUTDATED the result; null if the rule could not be resolved (yet) OUTDATED
      */
-    Result apply(String source, Map<String, Result> results);
+    Result apply(String source, ResultCache results);
 
     default String getTemplatename() {
         return getClass().getSimpleName();
