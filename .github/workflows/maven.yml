@@ -32,11 +32,5 @@ jobs:
       - name: Maven - Download dependencies
         run: mvn dependency:go-offline --batch-mode
 
-      - name: Maven - Compile
-        run: mvn -B compile
-
-      - name: Maven - Run tests
-        run: mvn -B test
-
       - name: Maven - Verify
         run: mvn -B verify
