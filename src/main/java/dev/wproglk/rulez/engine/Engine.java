@@ -9,21 +9,28 @@ import dev.wproglk.rulez.rules.Ruleset;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Function;
 
-public class Engine {
+public class Engine<T> {
     private final FileWriterPort fileWriter;
+    private final Function<ResultCache, T> mapper;
     private List<Ruleset> rulesets;
 
-    public Engine() {
-        this(new FileWriterAdapter());
+    public Engine(Function<ResultCache, T> mapper) {
+        this(new FileWriterAdapter(), mapper);
     }
 
     public Engine(final FileWriterPort fileWriter) {
+        this(fileWriter, null);
+    }
+
+    public Engine(final FileWriterPort fileWriter, Function<ResultCache, T> mapper) {
         this.fileWriter = fileWriter;
+        this.mapper = mapper;
     }
 
     static void main() throws IOException {
-        final Engine engine = new Engine();
+        final Engine<String> engine = new Engine<>(ResultCache.Mappers.singleAttributeMapper("fullname"));
 
         Rule firstName = new JsonPathRule("$.firstname");
         Rule backup = new JsonPathRule("$.backup");
@@ -52,12 +59,8 @@ public class Engine {
         this.rulesets = rulesets;
     }
 
-    public String executeRuleset(String source, String attribute) {
-        return Interpreter.execute(rulesets, source)
-                .getResult(attribute).getValue();
-    }
-
-    public String executeRuleset(String source) {
-        return executeRuleset(source, "fullname");
+    public T executeRuleset(String source) {
+        ResultCache resultCache = Interpreter.execute(rulesets, source);
+        return mapper.apply(resultCache);
     }
 }

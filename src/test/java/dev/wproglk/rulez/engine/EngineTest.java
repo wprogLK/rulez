@@ -51,7 +51,7 @@ public class EngineTest {
         JsonPathRule rule = new JsonPathRule("$.firstname");
         Ruleset ruleset = new Ruleset("firstname", rule);
 
-        Engine engine = new Engine(fileWriterPort);
+        Engine<?> engine = new Engine<>(fileWriterPort);
         engine.setRulesets(ruleset);
 
         // act
@@ -62,7 +62,7 @@ public class EngineTest {
     }
 
     @ParameterizedTest
-    @MethodSource
+    @MethodSource("concatenateFullname")
     void concatenateFullname(List<Ruleset> rulesets) {
         // arrange
         final String source = """
@@ -72,7 +72,7 @@ public class EngineTest {
                 }
                 """;
 
-        Engine engine = new Engine(fileWriterPort);
+        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("fullname"));
         engine.setRulesets(rulesets);
 
         // act
