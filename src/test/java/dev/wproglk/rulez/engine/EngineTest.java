@@ -5,7 +5,6 @@ import dev.wproglk.rulez.rules.ConcatenateRule;
 import dev.wproglk.rulez.rules.JsonPathRule;
 import dev.wproglk.rulez.rules.Rule;
 import dev.wproglk.rulez.rules.Ruleset;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -42,6 +41,47 @@ public class EngineTest {
         return Stream.of(
                 Arguments.of(named("logical order: first, last ,full", List.of(firstnameRuleset, lastnameRuleset, fullnameRuleset))),
                 Arguments.of(named("reversed logical order: full, last ,first", List.of(fullnameRuleset, lastnameRuleset, firstnameRuleset)))
+        );
+    }
+
+    public static Stream<Arguments> extraction_error() {
+
+        final String empty = """
+                {
+                
+                }
+                """;
+
+        final String otherAttribute = """
+                {
+                  "fullname": "Foo Bar"
+                }
+                """;
+
+        return Stream.of(
+                Arguments.of(named("irrelevant attribute json", otherAttribute)),
+                Arguments.of(named("empty json", empty))
+        );
+    }
+
+    public static Stream<Arguments> precedenceBaseExtraction() {
+
+        final String firstname = """
+                {
+                    "firstname": "Foo",
+                    "lastname": "Bar"
+                }
+                """;
+
+        final String lastname = """
+                {
+                    "lastname": "Bar"
+                }
+                """;
+
+        return Stream.of(
+                Arguments.of(named("entire json", firstname), "Foo"),
+                Arguments.of(named("single attribute json", lastname), "Bar")
         );
     }
 
@@ -101,7 +141,6 @@ public class EngineTest {
                 .satisfies(e -> assertThat(exception.getIncompletableRulesets()).isNotEmpty());
     }
 
-    @Disabled
     @Test
     void incompletableRulesets_circularRulesets() {
         // arrange
@@ -116,6 +155,88 @@ public class EngineTest {
 
         // act
         IncompletableRulesetException exception = catchThrowableOfType(IncompletableRulesetException.class, () -> engine.executeRuleset(""));
+
+        // assert
+        assertThat(exception).isInstanceOf(IncompletableRulesetException.class)
+                .satisfies(e -> assertThat(exception.getIncompletableRulesets()).isNotEmpty());
+    }
+
+    @Test
+    void extractLastname() {
+        // arrange
+        final String source = """
+                {
+                    "lastname": "Bar"
+                }
+                """;
+
+        final JsonPathRule rule = new JsonPathRule("$.lastname");
+        final Ruleset ruleset = new Ruleset("lastname", rule);
+
+        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("lastname"));
+        engine.setRulesets(ruleset);
+
+        // act
+        String result = engine.executeRuleset(source);
+
+        // assert
+        assertThat(result).isEqualTo("Bar");
+    }
+
+    @Test
+    void extractFirstname() {
+        // arrange
+        final String source = """
+                {
+                    "firstname": "Foo"
+                }
+                """;
+        final JsonPathRule rule = new JsonPathRule("$.firstname");
+        final Ruleset ruleset = new Ruleset("firstname", rule);
+
+        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("firstname"));
+        engine.setRulesets(ruleset);
+
+        // act
+        String result = engine.executeRuleset(source);
+
+        // assert
+        assertThat(result).isEqualTo("Foo");
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource
+    void precedenceBaseExtraction(String source, String expectedResult) {
+        // arrange
+        final JsonPathRule firstname = new JsonPathRule("$.firstname");
+        final JsonPathRule lastname = new JsonPathRule("$.lastname");
+
+        final Ruleset nameRuleset = new Ruleset("name", firstname, lastname);
+
+        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("name"));
+        engine.setRulesets(nameRuleset);
+
+        // act
+        String result = engine.executeRuleset(source);
+
+        // assert
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource(value = "extraction_error")
+    void extraction_error(String source) {
+        // arrange
+        final JsonPathRule firstname = new JsonPathRule("$.firstname");
+        final JsonPathRule lastname = new JsonPathRule("$.lastname");
+
+        final Ruleset nameRuleset = new Ruleset("name", firstname, lastname);
+
+        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("name"));
+        engine.setRulesets(nameRuleset);
+
+        // act
+        IncompletableRulesetException exception = catchThrowableOfType(IncompletableRulesetException.class, () -> engine.executeRuleset(source));
 
         // assert
         assertThat(exception).isInstanceOf(IncompletableRulesetException.class)
