@@ -105,9 +105,20 @@ public class EngineTest {
     @Test
     void incompletableRulesets_circularRulesets() {
         // arrange
+        Rule ruleAAB = new ConcatenateRule("AA", "B", " ");
+        Ruleset rulesetAB = new Ruleset("AB", ruleAAB);
+
+        Rule ruleABB = new ConcatenateRule("AB", "B", " ");
+        Ruleset rulesetAA = new Ruleset("AA", ruleABB);
+
+        Engine engine = new Engine(fileWriterPort);
+        engine.setRulesets(rulesetAB, rulesetAA);
 
         // act
+        IncompletableRulesetException exception = catchThrowableOfType(IncompletableRulesetException.class, () -> engine.executeRuleset(""));
 
         // assert
+        assertThat(exception).isInstanceOf(IncompletableRulesetException.class)
+                .satisfies(e -> assertThat(exception.getIncompletableRulesets()).isNotEmpty());
     }
 }
