@@ -112,7 +112,7 @@ public class EngineTest {
                 }
                 """;
 
-        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("fullname"));
+        Engine<String> engine = new Engine<>(ResultCache.Mappers.singleAttributeMapper("fullname"));
         engine.setRulesets(rulesets);
 
         // act
@@ -173,7 +173,7 @@ public class EngineTest {
         final JsonPathRule rule = new JsonPathRule("$.lastname");
         final Ruleset ruleset = new Ruleset("lastname", rule);
 
-        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("lastname"));
+        Engine<String> engine = new Engine<>(ResultCache.Mappers.singleAttributeMapper("lastname"));
         engine.setRulesets(ruleset);
 
         // act
@@ -194,7 +194,7 @@ public class EngineTest {
         final JsonPathRule rule = new JsonPathRule("$.firstname");
         final Ruleset ruleset = new Ruleset("firstname", rule);
 
-        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("firstname"));
+        Engine<String> engine = new Engine<>(ResultCache.Mappers.singleAttributeMapper("firstname"));
         engine.setRulesets(ruleset);
 
         // act
@@ -213,7 +213,7 @@ public class EngineTest {
 
         final Ruleset nameRuleset = new Ruleset("name", firstname, lastname);
 
-        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("name"));
+        Engine<String> engine = new Engine<>(ResultCache.Mappers.singleAttributeMapper("name"));
         engine.setRulesets(nameRuleset);
 
         // act
@@ -232,7 +232,7 @@ public class EngineTest {
 
         final Ruleset nameRuleset = new Ruleset("name", firstname, lastname);
 
-        Engine<String> engine = new Engine<>(fileWriterPort, ResultCache.Mappers.singleAttributeMapper("name"));
+        Engine<String> engine = new Engine<>(ResultCache.Mappers.singleAttributeMapper("name"));
         engine.setRulesets(nameRuleset);
 
         // act
